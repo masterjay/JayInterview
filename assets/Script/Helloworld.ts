@@ -1,3 +1,5 @@
+import EventMouse = cc.Event.EventMouse;
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -14,8 +16,61 @@ export default class Helloworld extends cc.Component {
     @property(cc.EditBox)
     textInput = null;
 
+    @property(cc.Node)
+    btns:cc.Node[] = [];
+
     start () {
         this.textInput.string = 2;
+        this.promiseTest1();
+
+        for(let i = 0 ; i < this.btns.length;i++)
+        {
+            this.btns[i].on(cc.Node.EventType.TOUCH_START, (e: cc.Event.EventTouch) => {
+
+                console.log("sdfsaf:"+i);
+            })
+
+        }
+
+        function job(state){
+            return new Promise((resolve,reject)=>{
+                if(state)
+                {
+                    resolve('success');
+                }else{
+                    reject('error');
+                }
+            })
+        }
+        let promise = job(true)
+        promise.then((data)=>{
+            console.log(data)
+            return job(true)
+        }).then((data)=>{
+            if(data !== "victory")
+            {
+                throw 'Deafeat'
+            }
+            return job(true)
+        }).then((data)=>{
+            console.log(data)
+        }).catch((err)=>{
+            console.log(err)
+            return job(false)
+        }).then((data)=>{
+            console.log(data)
+            return job(true)
+        }).catch((err)=>{
+            console.log(err)
+            return 'Error caught'
+        }).then((data)=>{
+            console.log(data);
+            return new Error("test")
+        }).then((data)=>{
+            console.log("Success",data.message);
+        }).catch((data)=>{
+            console.log("Error",data.message)
+        })
     }
 
     async onClickChangeColor(){
@@ -75,4 +130,26 @@ export default class Helloworld extends cc.Component {
             },10)
         })
     }
+
+    promiseTest1(){
+        cc.log(1)
+        setTimeout(function (){
+            cc.log(2)
+        },1000)
+        setTimeout(function (){
+            cc.log(3)
+        },0)
+        new Promise((resolve ,reject)=> {
+            cc.log(4)
+            resolve(5)
+        }).then((foo)=>{
+            cc.log(6)
+        })
+        cc.log(7)
+    }
+
+
+
+
+
 }
