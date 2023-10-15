@@ -20,9 +20,24 @@ export default class Helloworld extends cc.Component {
     btns:cc.Node[] = [];
 
     start () {
-        this.textInput.string = 2;
-        this.promiseTest1();
 
+        /*Promise.resolve(1).then(function resolve() {
+            console.log('Resolved!');
+        });
+
+        new Promise((resolve ,reject)=> {
+            cc.log(4)
+            resolve(5)
+        });
+
+        setTimeout(function timeout() {
+            console.log('Timed out!');
+        }, 0);
+        cc.log("aaaaa");*/
+        //return;
+        this.textInput.string = 2;
+        //this.promiseTest1();
+        //return
         for(let i = 0 ; i < this.btns.length;i++)
         {
             this.btns[i].on(cc.Node.EventType.TOUCH_START, (e: cc.Event.EventTouch) => {
@@ -147,6 +162,45 @@ export default class Helloworld extends cc.Component {
         })
         cc.log(7)
     }
+
+
+    animationstart(){
+        let fnArr = [];
+        fnArr.push(this.startAutoPosBottom, this.startAutoPosLeft, this.startAutoPosRight, this.startAutoPosTop, this.startAutoPosRest);
+        let randomNum = function () {
+            return 0.5 - Math.random();
+        }
+        fnArr.sort(randomNum);
+        fnArr.forEach((fn)=>{
+            fn(60, 160, true);
+        })
+    }
+
+    async startAutoPosTop(time: number, angle: number, isHint: boolean) {
+        return new Promise<void>((resolve, reject) => {
+            this.tweenCard?.stop();
+            this.tweenCard = cc.tween(this as PayoutSquintCard);
+            this.tweenCard
+                .delay(0.5)
+                .by(1, { autoPosTop: angle })
+                .call(() => {
+                    //  resolve();
+                })
+                .delay(0.5)
+                .to(1, { autoPosTop: 0 })
+                .call(() => {
+                    if (!isHint){
+
+                    }
+                       // this.stopAnimation();
+                })
+                .union()
+                .repeatForever()
+                .start();
+        })
+    }
+
+
 
 
 
